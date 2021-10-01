@@ -71,8 +71,22 @@ function App() {
 			value: 0,
 			answer: Number(0)
 		})
-
 	}
+
+	const pointHandler = () => {
+
+		let value = String(calc.value)
+		if (!value.includes('.')) {
+
+			const updateVal = value + "."
+
+			setCalc({
+				...calc,
+				value: String(updateVal)
+			})
+		}
+	}
+
 	const answerHandler = e => {
 
 		if (calc.operator === '') {
@@ -141,7 +155,9 @@ function App() {
 												? operatorHandler
 												: button === '='
 													? answerHandler
-													: numberHandler
+													: button === '.'
+														? pointHandler
+														: numberHandler
 							} />
 					))
 				}
