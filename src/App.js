@@ -60,7 +60,7 @@ function App() {
 
 			...calc,
 			answer: fact,
-			history: calc.history.length === 0 ? [[`${calc.value}!`, fact]] : [...calc.history, [`${calc.value}!`, fact]],
+			history: [...calc.history, [`${calc.value}!`, fact]],
 			value: 0
 		})
 	}
