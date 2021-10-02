@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import Button from './Components/Button';
+import History from './Components/History';
 import Screen from './Components/Screen';
 
 const buttons = [
@@ -18,14 +19,22 @@ function App() {
 		operator: '',
 		firstValue: 0,
 		secondValue: 0,
-		answer: ''
+		answer: '',
+		history: []
 	}
 
 	const [calc, setCalc] = useState(initialState)
 
-	const resetHandler = e => {
+	const resetHandler = () => {
 
-		setCalc(initialState)
+		setCalc({
+			value: 0,
+			operator: '',
+			firstValue: 0,
+			secondValue: 0,
+			answer: '',
+			history: [...calc.history]
+		})
 	}
 	const invertHandler = e => {
 
@@ -37,9 +46,9 @@ function App() {
 	}
 	const factorialHandler = () => {
 
-		if (calc.value === 1) {
+		if (calc.value === 0) {
 
-			// setcalc to 1
+			return
 		}
 		const val = calc.value
 		let fact = 1
@@ -51,9 +60,9 @@ function App() {
 
 			...calc,
 			answer: fact,
+			history: calc.history.length === 0 ? [[`${calc.value}!`, fact]] : [...calc.history, [`${calc.value}!`, fact]],
 			value: 0
 		})
-
 	}
 
 	const operatorHandler = e => {
@@ -112,9 +121,13 @@ function App() {
 			}
 		}
 
+		const ans = Number(calcAns(calc.firstValue, calc.value, calc.operator))
+
 		setCalc({
 			...calc,
-			answer: Number(calcAns(calc.firstValue, calc.value, calc.operator)),
+			answer: ans,
+			history:
+				[...calc.history, [calc.firstValue, calc.operator === 'X' ? '*' : calc.operator, calc.value, ans]],
 			value: 0,
 			operator: '',
 			firstValue: 0
@@ -133,37 +146,40 @@ function App() {
 
 
 	return (
+		<React.Fragment>
 
-		<div className="calc">
-			<Screen
-				value={calc.answer === '' ? calc.value : calc.answer} />
-			<div className="keys">
-				{
-					buttons.map((button, i) => (
-						<Button
-							value={button}
-							key={i}
-							className={button === '=' ? 'equal' : ''}
-							onClick={
-								button === 'C'
-									? resetHandler
-									: button === '+-'
-										? invertHandler
-										: button === '!'
-											? factorialHandler
-											: button === '/' || button === 'X' || button === '+' || button === '-'
-												? operatorHandler
-												: button === '='
-													? answerHandler
-													: button === '.'
-														? pointHandler
-														: numberHandler
-							} />
-					))
-				}
-			</div>
+			<History history={calc.history} />
+			< div className="calc" >
+				<Screen
+					value={calc.answer === '' ? calc.value : calc.answer} />
+				<div className="keys">
+					{
+						buttons.map((button, i) => (
+							<Button
+								value={button}
+								key={i}
+								className={button === '=' ? 'equal' : ''}
+								onClick={
+									button === 'C'
+										? resetHandler
+										: button === '+-'
+											? invertHandler
+											: button === '!'
+												? factorialHandler
+												: button === '/' || button === 'X' || button === '+' || button === '-'
+													? operatorHandler
+													: button === '='
+														? answerHandler
+														: button === '.'
+															? pointHandler
+															: numberHandler
+								} />
+						))
+					}
+				</div>
 
-		</div>
+			</div >
+		</React.Fragment>
 
 	)
 }
