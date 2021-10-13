@@ -73,7 +73,7 @@ button {
 	color: var(--white);
 	font-weight: bold;
 	cursor: pointer;
-	border-radius: 10px;
+	border-radius: 5px;
 	outline: none;
 }
 
